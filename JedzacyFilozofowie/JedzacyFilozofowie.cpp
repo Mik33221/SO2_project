@@ -1,4 +1,4 @@
-// JedzacyFilozofowie.cpp 
+// JedzacyFilozofowie.cpp
 
 #include <iostream>
 #include <thread>
@@ -10,90 +10,88 @@
 #define NOMINMAX
 #include <windows.h>
 
-const int LICZBA_FILOZOFOW = 5;
-std::array<std::mutex, LICZBA_FILOZOFOW> widelce;
-std::array<std::string, LICZBA_FILOZOFOW> stany_filozofow;
-std::stringstream wyswietlanie;
+const int PHILOSOPHERS_COUNT = 5;
+std::array<std::mutex, PHILOSOPHERS_COUNT> forks;
+std::array<std::string, PHILOSOPHERS_COUNT> philosophers_state;
+std::stringstream display;
+std::mutex display_mutex;
 
 void ClearScreen()
 {
-    HANDLE                     hStdOut;
-    COORD                      homeCoords = { 0, 0 };
+	HANDLE                     hStdOut;
+	COORD                      homeCoords = { 0, 0 };
 
-    hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hStdOut == INVALID_HANDLE_VALUE) return;
+	hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (hStdOut == INVALID_HANDLE_VALUE) return;
 
-    /* Move the cursor home */
-    SetConsoleCursorPosition(hStdOut, homeCoords);
+	/* Move the cursor home */
+	SetConsoleCursorPosition(hStdOut, homeCoords);
 }
 
-void wyswietl_stany() {
-    wyswietlanie.str("");
-    for (int i = 0; i < LICZBA_FILOZOFOW; i++) {
-        wyswietlanie << "Filozof " << i << ": " << stany_filozofow[i] << "\n";
-    }
-    //system("cls");
-    ClearScreen();
-    std::cout << wyswietlanie.str();
-    std::cout << std::flush;
-}
-
-void wyswietlaj() {
-	while (true) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
-		wyswietl_stany();
+void display_states() {
+	display.str("");
+	for (int i = 0; i < PHILOSOPHERS_COUNT; i++) {
+		display << "Filozof " << i << ": " << philosophers_state[i] << "\n";
 	}
+	//system("clear"); // Uncomment for Linux
+	ClearScreen();
+	std::cout << display.str();
+	std::cout << std::flush;
 }
 
-void filozofuj(int id) {
-    while (true) {
-        // Myślenie
-        {
-            stany_filozofow[id] = "mysli...  ";
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 2000 + 1000));
+void run(int id) {
+	while (true) {
 
-        // Podnoszenie widelców
-        int pierwszy = std::min(id, (id + 1) % LICZBA_FILOZOFOW);
-        int drugi = std::max(id, (id + 1) % LICZBA_FILOZOFOW);
+		// Thinking
+		display_mutex.lock();
+		{
+			philosophers_state[id] = "mysli...  ";
+		}
+		display_states();
+		display_mutex.unlock();
+		std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 2000 + 1000));
 
-        // Zawsze najpierw podnosimy widelec o niższym numerze
-        widelce[pierwszy].lock();
-        widelce[drugi].lock();
-    
-        // Jedzenie
-        {
-            stany_filozofow[id] = "je...     ";
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 2000 + 1000));
+		// Getting forks
+		int first = std::min(id, (id + 1) % PHILOSOPHERS_COUNT);
+		int second = std::max(id, (id + 1) % PHILOSOPHERS_COUNT);
 
-        // Odkładanie widelców (kolejność nie ma znaczenia)
-        widelce[pierwszy].unlock();
-        widelce[drugi].unlock();
-    }
+
+		// Always get forks with lower number first
+		forks[first].lock();
+		forks[second].lock();
+
+		// Eating
+		display_mutex.lock();
+		{
+			philosophers_state[id] = "je...     ";
+		}
+		display_states();
+		display_mutex.unlock();
+		std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 2000 + 1000));
+
+		// Putting forks back
+		forks[first].unlock();
+		forks[second].unlock();
+	}
 }
 
 int main() {
 	srand(time(NULL));
-    // Inicjalizacja stanów
-    for (auto& stan : stany_filozofow) {
-        stan = "myśli...";
-    }
+	// Initialize
+	for (auto& stan : philosophers_state) {
+		stan = "myśli...";
+	}
 
-    std::array<std::thread, LICZBA_FILOZOFOW> filozofowie;
-    
-    // Tworzenie wątków dla filozofów
-    for (int i = 0; i < LICZBA_FILOZOFOW; i++) {
-        filozofowie[i] = std::thread(filozofuj, i);
-    }
+	std::array<std::thread, PHILOSOPHERS_COUNT> philosophers;
 
-	//Tworzenie wątka do wyświetlania 
-	std::thread watek_wyswietlajacy(wyswietlaj);
+	// Create threads
+	for (int i = 0; i < PHILOSOPHERS_COUNT; i++) {
+		philosophers[i] = std::thread(run, i);
+	}
 
-    // Oczekiwanie na zakończenie wątków (w tym przypadku nigdy nie nastąpi)
-    for (auto& f : filozofowie) {
-        f.join();
-    }
+	for (auto& f : philosophers) {
+		f.join();
+	}
 
-    return 0;
+	return 0;
 }
