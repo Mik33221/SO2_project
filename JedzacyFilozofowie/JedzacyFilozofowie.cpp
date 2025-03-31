@@ -6,13 +6,15 @@
 #include <array>
 #include <chrono>
 #include <sstream>
+#include <vector>
 
 #define NOMINMAX
 #include <windows.h>
 
-const int PHILOSOPHERS_COUNT = 5;
-std::array<std::mutex, PHILOSOPHERS_COUNT> forks;
-std::array<std::string, PHILOSOPHERS_COUNT> philosophers_state;
+int PHILOSOPHERS_COUNT;
+//std::vector<std::mutex> forks;
+std::mutex* forks;
+std::vector<std::string> philosophers_state;
 std::stringstream display;
 std::mutex display_mutex;
 
@@ -33,7 +35,7 @@ void display_states() {
 	for (int i = 0; i < PHILOSOPHERS_COUNT; i++) {
 		display << "Filozof " << i << ": " << philosophers_state[i] << "\n";
 	}
-	//system("clear"); // Uncomment for Linux
+	//system("clear");
 	ClearScreen();
 	std::cout << display.str();
 	std::cout << std::flush;
@@ -75,14 +77,32 @@ void run(int id) {
 	}
 }
 
-int main() {
-	srand(time(NULL));
-	// Initialize
-	for (auto& stan : philosophers_state) {
-		stan = "myśli...";
+int main(int argc, char** argv) {
+	// argument checking
+	if (argc != 2) {
+		std::cout << "Usage: " << argv[0] << " <number_of_philosophers>\n";
+		return 1;
 	}
 
-	std::array<std::thread, PHILOSOPHERS_COUNT> philosophers;
+	try {
+		PHILOSOPHERS_COUNT = std::stoi(argv[1]);
+		if (PHILOSOPHERS_COUNT < 2) {
+			std::cout << "Number of philosophers must be at least 2\n";
+			return 1;
+		}
+	} catch (const std::exception& e) {
+		std::cout << "Invalid number of philosophers\n";
+		return 1;
+	}
+
+	srand(time(NULL));
+
+	// Initialize vectors with the specified size
+	forks = new std::mutex[PHILOSOPHERS_COUNT];
+
+	philosophers_state.resize(PHILOSOPHERS_COUNT, "myśli...");
+
+	std::vector<std::thread> philosophers(PHILOSOPHERS_COUNT);
 
 	// Create threads
 	for (int i = 0; i < PHILOSOPHERS_COUNT; i++) {
@@ -93,5 +113,6 @@ int main() {
 		f.join();
 	}
 
+	delete[] forks;
 	return 0;
 }
