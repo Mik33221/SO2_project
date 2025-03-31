@@ -12,7 +12,6 @@
 #include <windows.h>
 
 int PHILOSOPHERS_COUNT;
-//std::vector<std::mutex> forks;
 std::mutex* forks;
 std::vector<std::string> philosophers_state;
 std::stringstream display;
@@ -35,7 +34,6 @@ void display_states() {
 	for (int i = 0; i < PHILOSOPHERS_COUNT; i++) {
 		display << "Filozof " << i << ": " << philosophers_state[i] << "\n";
 	}
-	//system("clear");
 	ClearScreen();
 	std::cout << display.str();
 	std::cout << std::flush;
@@ -43,7 +41,6 @@ void display_states() {
 
 void run(int id) {
 	while (true) {
-
 		// Thinking
 		display_mutex.lock();
 		{
@@ -56,7 +53,6 @@ void run(int id) {
 		// Getting forks
 		int first = std::min(id, (id + 1) % PHILOSOPHERS_COUNT);
 		int second = std::max(id, (id + 1) % PHILOSOPHERS_COUNT);
-
 
 		// Always get forks with lower number first
 		forks[first].lock();
@@ -90,14 +86,16 @@ int main(int argc, char** argv) {
 			std::cout << "Number of philosophers must be at least 2\n";
 			return 1;
 		}
-	} catch (const std::exception& e) {
+	}
+	catch (const std::exception& e) {
 		std::cout << "Invalid number of philosophers\n";
 		return 1;
 	}
 
 	srand(time(NULL));
+	system("cls");
 
-	// Initialize vectors with the specified size
+	// Initialize with the specified size
 	forks = new std::mutex[PHILOSOPHERS_COUNT];
 
 	philosophers_state.resize(PHILOSOPHERS_COUNT, "myśli...");
