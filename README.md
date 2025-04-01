@@ -1,10 +1,15 @@
 # SO2_project
 
-## Instrukcje uruchomienia projektów
-- Pobierz najnowszy release
-- Uruchom JedzacyFilozofowie.exe z dokładnie 1 dodatkowym argumentem - liczbą filozofów.
-- Eg:  .\JedzacyFilozofowie 5
+## Instrukcja instalacji projektu za pomocą Developer Command Prompt for VS 2022
 
+Kompilacja JezdacyFilozofowie/JedzacyFilozofowie.cpp
+```
+cl /EHsc JedzacyFilozofowie.cpp
+```
+Uruchomienie programu z dokładnie 1 dodatkowym argumentem - liczbą filozofów.
+```
+.\JedzacyFilozofowie 5
+```
 ## Opis problemu
 Problem ucztujących filozofów to zadanie polegające na synchronizacji dostępu procesów do ograniczonej ilości zasobów. 
 Pięciu filozofów siedzi przy stole. Każdy wykonuje jedną z dwóch czynności – je lub myśli. Stół jest okrągły, przed każdym z nich znajduje się miska ze spaghetti, a pomiędzy każdą sąsiadującą parą filozofów leży widelec, a więc każda osoba ma przy sobie dwie sztuki – po swojej lewej i prawej stronie. Zakłada się, że każdy filozof korzysta z dwóch widelkców do jedzenia potrawy. Dodatkowo nie ma możliwości skorzystania z widelca, który nie znajduje się bezpośrednio przed daną osobą.
@@ -16,19 +21,16 @@ Aby do takiej sytuacji nie dopuścić, w projekcie zastosowano hierarchię zasob
 ## Wylistowanie:
 
 ### Wątków i co reprezentują:
-- Wątki filozofów (std::vector<std::thread> philosophers):  
+- Wątki filozofów `(std::vector<std::thread> philosophers)`:  
 Każdy wątek reprezentuje jednego filozofa
-Liczba wątków jest określona przez PHILOSOPHERS_COUNT (podawane jako argument programu)
-Każdy wątek wykonuje funkcję run(id), gdzie wykonuje cyklicznie sekwencję: myślenie -> próba podniesienia widelców -> jedzenie -> odkładanie widelców
+Liczba wątków jest określona przez `PHILOSOPHERS_COUNT` (podawane jako argument programu)
+Każdy wątek wykonuje funkcję `run(id)`, gdzie wykonuje cyklicznie sekwencję: myślenie -> próba podniesienia widelców -> jedzenie -> odkładanie widelców
 ### Sekcje krytyczne i ich rozwiązanie:
 - Dostęp do widelców:  
-Rozwiązane przez tablicę mutexów std::mutex* forks
+Rozwiązane przez tablicę mutexów `std::mutex* forks`
 Każdy widelec jest reprezentowany przez jeden mutex
 Dwaj filozofowie nie mogą jednocześnie posiadać jednego mutexa
 Do zakleszczenia nie dochodzi, ponieważ filozofowie zawsze podnoszą widelce w tej samej kolejności (najpierw o niższym numerze)
 - Dostęp do wyświetlania stanu (display_states()):  
-Chroniony przez mutex display_mutex
-Zabezpiecza przed jednoczesnym aktualizowaniem konsoli przez różnych filozofów. Jest to istotne, ponieważ dwa wątki aktualizujące konsolę naraz mogłyby doprowadzić do chwilowych nieprawidłowych wydruków
-Sekcja krytyczna obejmuje:
-Aktualizację stanu filozofa w tablicy philosophers_state
-Wyświetlenie aktualnego stanu wszystkich filozofów
+Chroniony przez mutex `display_mutex`
+Zabezpiecza przed jednoczesnym aktualizowaniem konsoli przez różnych filozofów. Dzięki temu wyświetlane dane zawsze są aktualne i prawidłowe.
