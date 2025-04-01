@@ -1,4 +1,4 @@
-# SO2_project
+# SO2_project_1
 
 ## Instrukcja instalacji projektu za pomocą Developer Command Prompt for VS 2022
 
