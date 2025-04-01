@@ -10,6 +10,7 @@ Uruchomienie programu z dokładnie 1 dodatkowym argumentem - liczbą filozofów.
 ```
 .\JedzacyFilozofowie 5
 ```
+Uruchomienie programu na systemach UNIX nie jest możliwe ze względu na wykorzystaną bibliotekę do kontroli wyjścia w terminalu
 ## Opis problemu
 Problem ucztujących filozofów to zadanie polegające na synchronizacji dostępu procesów do ograniczonej ilości zasobów. 
 Pięciu filozofów siedzi przy stole. Każdy wykonuje jedną z dwóch czynności – je lub myśli. Stół jest okrągły, przed każdym z nich znajduje się miska ze spaghetti, a pomiędzy każdą sąsiadującą parą filozofów leży widelec, a więc każda osoba ma przy sobie dwie sztuki – po swojej lewej i prawej stronie. Zakłada się, że każdy filozof korzysta z dwóch widelkców do jedzenia potrawy. Dodatkowo nie ma możliwości skorzystania z widelca, który nie znajduje się bezpośrednio przed daną osobą.
