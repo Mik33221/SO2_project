@@ -73,7 +73,7 @@ Uruchomienie serwera:
 
 ## Opis problemu
 
-Celem projektu jest stworzenie wielowątkowego serwera chatu oraz klienta w C++. Każdy klient może wysyłać i odbierać wiadomości w czasie rzeczywistym. Serwer obsługuje wielu klientów jednocześnie, a komunikacja odbywa się przez TCP.
+Celem projektu jest stworzenie wielowątkowego serwera chatu oraz klienta w C++. Każdy klient może wysyłać i odbierać wiadomości w czasie rzeczywistym. Serwer obsługuje wszystkich klientów jednocześnie. Po dołączeniu nowego klienta serwer wysyła mu dotychczasową historię chatu. Po przyjęciu nowej wiadomości od któegoś z klientów serwer rozsyła ją do wszystkich podłączonych klientów, oraz zapisuje w historii.
 
 ## Wylistowanie:
 
