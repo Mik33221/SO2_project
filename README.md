@@ -43,39 +43,37 @@ Zabezpiecza przed jednoczesnym aktualizowaniem konsoli przez różnych filozofó
 
 Kompilacja SerwerChatu.cpp:
 ```
-cl /EHsc SerwerChatu.cpp /link ws2_32.lib
+cl /EHsc SerwerChatu.cpp
 ```
 Kompilacja KlientChatu.cpp:
 ```
-cl /EHsc KlientChatu.cpp /link ws2_32.lib
+cl /EHsc KlientChatu.cpp
 ```
 Uruchomienie serwera:
 ```
-serwer.exe
+SerwerChatu.exe
 ```
-Uruchomienie klienta (możesz uruchomić wiele instancji, na tym samym lub innym komputerze w sieci):
+Uruchomienie klienta (możliwe uruchomienie wielu instancji):
 ```
-klient.exe
+KlientChatu.exe
 ```
-Po uruchomieniu klienta podaj IP serwera (np. `127.0.0.1` dla lokalnego testu).
-
-Uruchomienie programu na systemach UNIX nie jest możliwe ze względu na wykorzystaną bibliotekę WinSock.
+Po uruchomieniu klienta należy podać IP serwera (`127.0.0.1` dla serwera lokalnego).
 
 ## Instrukcja instalacji projektu na systemie Linux
 
 Kompilacja serwera:
 ```
-g++ SerwerChatu.cpp -o serwer -lpthread
+g++ SerwerChatu_linux.cpp -o SerwerChatu -pthread
 ```
 
 Uruchomienie serwera:
 ```
-./serwer
+./SerwerChatu
 ```
 
 ## Opis problemu
 
-Celem projektu jest stworzenie prostego wielowątkowego serwera chatu oraz klienta w C++ z użyciem WinSock. Każdy klient może wysyłać i odbierać wiadomości w czasie rzeczywistym. Serwer obsługuje wielu klientów jednocześnie, a komunikacja odbywa się przez TCP.
+Celem projektu jest stworzenie wielowątkowego serwera chatu oraz klienta w C++. Każdy klient może wysyłać i odbierać wiadomości w czasie rzeczywistym. Serwer obsługuje wielu klientów jednocześnie, a komunikacja odbywa się przez TCP.
 
 ## Wylistowanie:
 
@@ -87,8 +85,6 @@ Celem projektu jest stworzenie prostego wielowątkowego serwera chatu oraz klien
 
 ### Sekcje krytyczne i ich rozwiązanie:
 - Dostęp do listy klientów i historii wiadomości:  
-  Synchronizowany za pomocą mutexów (`std::mutex`). Zapobiega to konfliktom podczas jednoczesnego dostępu przez wiele wątków.
-- Dostęp do wyświetlania wiadomości:  
-  Chroniony przez mutex, aby zapobiec nakładaniu się komunikatów w konsoli.
+  Synchronizowany za pomocą mutexów (`clients_mutex`) i (`history_mutex`). Zapobiega to konfliktom podczas jednoczesnego dostępu przez wiele wątków. Zapewnia też odpowiednią kolejność zapisu wiadomości w historii.
 
 ---
