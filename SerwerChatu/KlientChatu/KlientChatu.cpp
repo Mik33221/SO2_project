@@ -8,6 +8,7 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
+// On recieving message print it to console
 void receive_messages(SOCKET sock) {
     char buffer[1024];
     int bytes_received;
@@ -22,6 +23,7 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
 
+    // Initialize Winsock
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
         std::cerr << "WSAStartup failed!" << std::endl;
@@ -35,10 +37,12 @@ int main() {
         return 1;
     }
 
+    // IP address from user
     std::string server_ip;
     std::cout << "Podaj IP serwera: 158.180.21.212";
     //std::cin >> server_ip;
     server_ip = "158.180.21.212";
+    server_ip = "127.0.0.1";
     std::cin.ignore();
 
     sockaddr_in server_addr = {};
@@ -46,6 +50,7 @@ int main() {
     server_addr.sin_port = htons(25565);
     server_addr.sin_addr.s_addr = inet_addr(server_ip.c_str());
 
+    // Try connecting to server
     if (connect(sock, (sockaddr*)&server_addr, sizeof(server_addr)) == SOCKET_ERROR) {
         std::cerr << "Nie można połączyć z serwerem!" << std::endl;
         closesocket(sock);
@@ -55,8 +60,10 @@ int main() {
 
     std::cout << "Połączono z serwerem. Możesz pisać wiadomości." << std::endl;
 
+    // Thread recieving messages
     std::thread receiver(receive_messages, sock);
 
+    // Thread reading from user and sending
     std::string msg;
     while (std::getline(std::cin, msg)) {
         msg += '\n';
