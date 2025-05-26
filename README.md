@@ -73,13 +73,13 @@ Uruchomienie serwera:
 
 ## Opis problemu
 
-Celem projektu jest stworzenie wielowątkowego serwera chatu oraz klienta w C++. Każdy klient może wysyłać i odbierać wiadomości w czasie rzeczywistym. Serwer obsługuje wszystkich klientów jednocześnie. Po dołączeniu nowego klienta serwer wysyła mu dotychczasową historię chatu. Po przyjęciu nowej wiadomości od któegoś z klientów serwer rozsyła ją do wszystkich podłączonych klientów, oraz zapisuje w historii.
+Celem projektu jest stworzenie wielowątkowego serwera chatu oraz klienta w C++. Każdy klient może wysyłać i odbierać wiadomości w czasie rzeczywistym. Serwer obsługuje wszystkich klientów jednocześnie. Po dołączeniu nowego klienta serwer wysyła mu dotychczasową historię chatu. Po przyjęciu nowej wiadomości od któregoś z klientów serwer rozsyła ją do wszystkich podłączonych klientów, oraz zapisuje w historii.
 
 ## Wylistowanie:
 
 ### Wątków i co reprezentują:
 - Wątki klientów na serwerze (`std::thread(handle_client, client_socket)`):  
-  Każdy wątek obsługuje jednego połączonego klienta. Dzięki temu wielu klientów może komunikować się z serwerem jednocześnie.
+  Każdy wątek obsługuje jednego połączonego klienta. Dzięki temu wielu klientów może komunikować się z serwerem jednocześnie. Nowy wątek klienta synchronizuje historię, a następnie czeka na wiadomości.
 - Wątek odbierający wiadomości w kliencie (`std::thread reciever(recieve_messages, sock)`):  
   Pozwala na jednoczesne odbieranie wiadomości i pisanie przez użytkownika.
 
