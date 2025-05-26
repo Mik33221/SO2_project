@@ -25,7 +25,7 @@ void ClearScreen()
 	hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	if (hStdOut == INVALID_HANDLE_VALUE) return;
 
-	/* Move the cursor home */
+	// Move the cursor home 
 	SetConsoleCursorPosition(hStdOut, homeCoords);
 }
 
@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
 	}
 
 	srand(time(NULL));
-	system("cls");
+	ClearScreen();
 
 	// Initialize with the specified size
 	forks = new std::mutex[PHILOSOPHERS_COUNT];
