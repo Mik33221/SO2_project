@@ -78,9 +78,9 @@ Celem projektu jest stworzenie wielowątkowego serwera chatu oraz klienta w C++.
 ## Wylistowanie:
 
 ### Wątków i co reprezentują:
-- Wątki klientów na serwerze (`std::thread`):  
+- Wątki klientów na serwerze (`std::thread(handle_client, client_socket)`):  
   Każdy wątek obsługuje jednego połączonego klienta. Dzięki temu wielu klientów może komunikować się z serwerem jednocześnie.
-- Wątek odbierający wiadomości w kliencie (`std::thread`):  
+- Wątek odbierający wiadomości w kliencie (`std::thread reciever(recieve_messages, sock)`):  
   Pozwala na jednoczesne odbieranie wiadomości i pisanie przez użytkownika.
 
 ### Sekcje krytyczne i ich rozwiązanie:
