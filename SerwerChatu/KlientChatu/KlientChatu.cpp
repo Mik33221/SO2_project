@@ -42,7 +42,7 @@ int main() {
     std::cout << "Podaj IP serwera: 158.180.21.212";
     //std::cin >> server_ip;
     server_ip = "158.180.21.212";
-    server_ip = "127.0.0.1";
+    //server_ip = "127.0.0.1";
     std::cin.ignore();
 
     sockaddr_in server_addr = {};
