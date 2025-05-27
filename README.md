@@ -85,6 +85,7 @@ Celem projektu jest stworzenie wielowątkowego serwera chatu oraz klienta w C++.
 
 ### Sekcje krytyczne i ich rozwiązanie:
 - Dostęp do listy klientów i historii wiadomości:  
-  Synchronizowany za pomocą mutexów `clients_mutex` i `history_mutex`. Zapobiega to konfliktom podczas jednoczesnego dostępu przez wiele wątków. Zapewnia też odpowiednią kolejność zapisu wiadomości w historii.
+  Synchronizowany za pomocą mutexów `clients_mutex` i `history_mutex`. Zapobiega to konfliktom podczas jednoczesnego dołączenia wielu klientów, lub przychodzących w tym samym momencie wiadomości. Zapewnia 
+ odpowiednią kolejność zapisu wiadomości w historii.
 
 ---
