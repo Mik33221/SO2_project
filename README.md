@@ -23,7 +23,7 @@ Aby do takiej sytuacji nie dopuścić, w projekcie zastosowano hierarchię zasob
 ## Wylistowanie:
 
 ### Wątków i co reprezentują:
-- Wątki filozofów `(std::vector<std::thread> philosophers)`:  
+- Wątki filozofów `std::vector<std::thread> philosophers`:  
 Każdy wątek reprezentuje jednego filozofa
 Liczba wątków jest określona przez `PHILOSOPHERS_COUNT` (podawane jako argument programu)
 Każdy wątek wykonuje funkcję `run(id)`, gdzie wykonuje cyklicznie sekwencję: myślenie -> próba podniesienia widelców -> jedzenie -> odkładanie widelców
@@ -57,7 +57,7 @@ Uruchomienie klienta (możliwe uruchomienie wielu instancji):
 ```
 KlientChatu.exe
 ```
-Po uruchomieniu klienta należy podać IP serwera (`127.0.0.1` dla serwera lokalnego).
+Po uruchomieniu klienta należy podać IP serwera (127.0.0.1 dla serwera lokalnego).
 
 ## Instrukcja instalacji projektu na systemie Linux
 
@@ -73,18 +73,18 @@ Uruchomienie serwera:
 
 ## Opis problemu
 
-Celem projektu jest stworzenie wielowątkowego serwera chatu oraz klienta w C++. Każdy klient może wysyłać i odbierać wiadomości w czasie rzeczywistym. Serwer obsługuje wszystkich klientów jednocześnie. Po dołączeniu nowego klienta serwer wysyła mu dotychczasową historię chatu. Po przyjęciu nowej wiadomości od któegoś z klientów serwer rozsyła ją do wszystkich podłączonych klientów, oraz zapisuje w historii.
+Celem projektu jest stworzenie wielowątkowego serwera chatu oraz klienta w C++. Każdy klient może wysyłać i odbierać wiadomości w czasie rzeczywistym. Serwer obsługuje wszystkich klientów jednocześnie. Po dołączeniu nowego klienta serwer wysyła mu dotychczasową historię chatu. Po przyjęciu nowej wiadomości od któregoś z klientów serwer rozsyła ją do wszystkich podłączonych klientów, oraz zapisuje w historii.
 
 ## Wylistowanie:
 
 ### Wątków i co reprezentują:
-- Wątki klientów na serwerze (`std::thread(handle_client, client_socket)`):  
-  Każdy wątek obsługuje jednego połączonego klienta. Dzięki temu wielu klientów może komunikować się z serwerem jednocześnie.
-- Wątek odbierający wiadomości w kliencie (`std::thread reciever(recieve_messages, sock)`):  
+- Wątki klientów na serwerze `std::thread(handle_client, client_socket)`:  
+  Każdy wątek obsługuje jednego połączonego klienta. Dzięki temu wielu klientów może komunikować się z serwerem jednocześnie. Nowy wątek klienta synchronizuje historię, a następnie czeka na wiadomości.
+- Wątek odbierający wiadomości w kliencie `std::thread reciever(recieve_messages, sock)`:  
   Pozwala na jednoczesne odbieranie wiadomości i pisanie przez użytkownika.
 
 ### Sekcje krytyczne i ich rozwiązanie:
 - Dostęp do listy klientów i historii wiadomości:  
-  Synchronizowany za pomocą mutexów (`clients_mutex`) i (`history_mutex`). Zapobiega to konfliktom podczas jednoczesnego dostępu przez wiele wątków. Zapewnia też odpowiednią kolejność zapisu wiadomości w historii.
+  Synchronizowany za pomocą mutexów `clients_mutex` i `history_mutex`. Zapobiega to konfliktom podczas jednoczesnego dostępu przez wiele wątków. Zapewnia też odpowiednią kolejność zapisu wiadomości w historii.
 
 ---
