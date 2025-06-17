@@ -1,4 +1,4 @@
-# SO2_project_1
+# Projekt_1 - jedzący filozofowie
 
 ## Instrukcja instalacji projektu za pomocą Developer Command Prompt for VS 2022
 
@@ -37,7 +37,7 @@ Do zakleszczenia nie dochodzi, ponieważ filozofowie zawsze podnoszą widelce w 
 Chroniony przez mutex `display_mutex`
 Zabezpiecza przed jednoczesnym aktualizowaniem konsoli przez różnych filozofów. Dzięki temu wyświetlane dane zawsze są aktualne i prawidłowe.
 
-# SO2_project_2
+# Projekt_2 - serwer chatu
 
 ## Instrukcja instalacji projektu za pomocą Developer Command Prompt for VS 2022
 
